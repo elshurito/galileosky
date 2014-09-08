@@ -25,7 +25,7 @@ heshHex={
     0xF9:4, 0x5A:4, 0x5B:4, 0x47:4, 0x5C:68,
 }
 heshStr={
-    '01':1, '02':1, '03':15, '04':2, '10':2,
+    '01':1, '02':1, '03':'a0001', '04':'a0002', '10':2,
     '20':4, '30':9, '33':4, '34':2, '35':1,
     '40':2, '41':2, '42':2, '43':1, '44':4,
     '45':2, '46':2, '50':2, '51':2, '52':2,
@@ -55,10 +55,37 @@ def ParseTitleStr(package):
     str(package).upper()
     title=package[0:2]
     lengthPackage=heshStr.get(title)
-    #print(title+" - "+str(lengthPackage))
     print(package)
     package=package[2+2*(int(lengthPackage)):]
-
-
-
     return package
+
+def ClearPackage(x,lenx):
+    return x[2+2*lenx:]
+
+def ParseTitleBoolen(package):
+    str(package).upper()
+    title=package[0:2]
+    lengthPackage=heshStr.get(title)
+    if lengthPackage == 'a0001':
+        code='a0001'
+    elif lengthPackage == 'a0002':
+        code='a0002'
+    elif lengthPackage == 'a0003':
+        code='a0003'
+    elif lengthPackage == 'a0004':
+        code='a0004'
+    else:
+        code = lengthPackage
+    return code
+
+def IMEI(package):
+    #codeHex=0x03
+    #codeStr='03'
+    packageLength=15
+    return package[2:packageLength*2+2].decode("hex")
+
+def ID(package):
+    #codeHex=0x04
+    #codeStr='04'
+    #packageLength=2
+    return int(package[4:6]+package[2:4], 16)
