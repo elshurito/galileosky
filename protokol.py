@@ -1,3 +1,6 @@
+import datetime
+import time
+
 heshHex={
     0x01:1, 0x02:1, 0x03:15, 0x04:2, 0x10:2,
     0x20:4, 0x30:9, 0x33:4, 0x34:2, 0x35:1,
@@ -26,7 +29,7 @@ heshHex={
 }
 heshStr={
     '01':1, '02':1, '03':'a0001', '04':'a0002', '10':2,
-    '20':4, '30':9, '33':4, '34':2, '35':1,
+    '20':'a0003', '30':'a0004', '33':4, '34':'a0005', '35':1,
     '40':2, '41':2, '42':2, '43':1, '44':4,
     '45':2, '46':2, '50':2, '51':2, '52':2,
     '53':2, '58':2, '59':2, '70':2, '71':2,
@@ -50,7 +53,6 @@ heshStr={
     'F4':4, 'F5':4, 'F6':4, 'F7':4, 'F8':4,
     'F9':4, '5A':4, '5B':4, '47':4, '5C':68,
 }
-print(heshHex.get(0xd3))
 def ParseTitleStr(package):
     str(package).upper()
     title=package[0:2]
@@ -89,3 +91,30 @@ def ID(package):
     #codeStr='04'
     #packageLength=2
     return int(package[4:6]+package[2:4], 16)
+
+def DT(package):
+    #codeHex=0x20
+    #codeStr='20'
+    #packageLength=4
+    return datetime.datetime.fromtimestamp(int(package[8:10]+package[6:8]+package[4:6]+package[2:4] ,16))
+
+def Coordinates(package):
+    #codeHex=0x30
+    #codeStr='30'
+    #packageLength=9
+    if package[2]=='0':
+        correct=True
+    else:
+        correct=False
+
+    NumOfSattelite = int(package[3], 16)
+    Latitude=(int(package[10:12]+package[8:10]+package[6:8]+package[4:6], 16))/1000000.0
+    Longitude=(int(package[18:20]+package[16:18]+package[14:16]+package[12:14], 16)/1000000.0)
+    return correct,NumOfSattelite,Latitude,Longitude
+
+def SpeedDirection(package):
+    #codeHex=0x34
+    #packageLength=4
+    speed=(int(package[4:6]+package[2:4], 16))/10.0
+    direction=(int(package[8:10]+package[6:8], 16))/10.0
+    return speed, direction
